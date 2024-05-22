@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # External Apps
     "rest_framework",
-    # Internal Apps
+    # Internal Apps,
+    "drf_book_store.apps.book",
 ]
 
 MIDDLEWARE = [
