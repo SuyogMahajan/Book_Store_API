@@ -2,11 +2,17 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from drf_book_store.settings import base_settings
 
 
 def main():
     """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'drf_book_store.settings')
+
+    if(base_settings.DEBUG):
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'drf_book_store.settings.local_settings')
+    else:
+        os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'drf_book_store.settings.production_settings')
+        
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
