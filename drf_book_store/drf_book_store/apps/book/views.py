@@ -26,18 +26,20 @@ class BookViewSet(viewsets.ViewSet):
 
     queryset = Book.objects.all()
 
+    @extend_schema(responses=BookSerializer)
     def list(self, request):
         serializer = BookSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
 
-class LangugaeViewSet(viewsets.ViewSet):
+class LanguageViewSet(viewsets.ViewSet):
     """
     a simple viewset for viewing authors
     """
 
     queryset = Language.objects.all()
 
+    @extend_schema(responses=LanguageSerializer)
     def list(self, request):
         serializer = LanguageSerializer(self.queryset, many=True)
         return Response(serializer.data)

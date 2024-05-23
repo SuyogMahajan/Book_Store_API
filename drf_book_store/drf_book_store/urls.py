@@ -23,7 +23,9 @@ from .apps.book import views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 router = DefaultRouter()
-router.register(r"author", views.AuthorViewSet)
+router.register(r"Author", views.AuthorViewSet)
+router.register(r"Book", views.BookViewSet)
+router.register(r"Language", views.LanguageViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
