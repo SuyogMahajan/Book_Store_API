@@ -43,11 +43,16 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    
     # External Apps
     "rest_framework",
+    "rest_framework.authtoken",
     "drf_spectacular",
+
     # Internal Apps,
-    "drf_book_store.apps.book",
+    "book",
+    "auth_app",
+
 ]
 
 MIDDLEWARE = [
@@ -132,7 +137,15 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+AUTH_USER_MODEL = 'auth_app.AuthUser'
 
-REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema"}
+REST_FRAMEWORK = {"DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+ 'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 SPECTACULAR_SETTINGS = {"TITLE": "Book Store Api"}

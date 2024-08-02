@@ -18,14 +18,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .apps.book import views
-
+from book import views as book_views
+from auth_app import views as auth_views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 router = DefaultRouter()
-router.register(r"Author", views.AuthorViewSet)
-router.register(r"Book", views.BookViewSet)
-router.register(r"Language", views.LanguageViewSet)
+router.register(r"Author", book_views.AuthorViewSet)
+router.register(r"Book", book_views.BookViewSet)
+router.register(r"Language", book_views.LanguageViewSet)
+router.register(r"users", auth_views.UserViewSet, basename="user")
+router.register(r"Review", book_views.ReviewViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
