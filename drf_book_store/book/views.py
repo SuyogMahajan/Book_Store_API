@@ -2,11 +2,12 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import action
 
 from drf_spectacular.utils import extend_schema
 from .models import Author, Book, Language, Review
 from .serializers import AuthorSerializer, BookSerializer, LanguageSerializer, ReviewSerializer
-
+from auth_app.models import AuthUser
 
 class AuthorViewSet(viewsets.ViewSet):
     """
@@ -14,6 +15,7 @@ class AuthorViewSet(viewsets.ViewSet):
     """
 
     queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
 
     @extend_schema(responses=AuthorSerializer)
     def list(self, request):
@@ -37,6 +39,7 @@ class BookViewSet(viewsets.ViewSet):
     """
 
     queryset = Book.objects.all()
+    serializer_class = BookSerializer
 
     @extend_schema(responses=BookSerializer)
     def list(self, request):
@@ -60,6 +63,7 @@ class LanguageViewSet(viewsets.ViewSet):
     """
 
     queryset = Language.objects.all()
+    serializer_class = LanguageSerializer
 
     @extend_schema(responses=LanguageSerializer)
     def list(self, request):
@@ -85,7 +89,7 @@ class ReviewViewSet(viewsets.ViewSet):
 
     @extend_schema(responses=ReviewSerializer)
     def list(self, request):
-        serializer = ReviewSerializer(queryset, many=True)
+        serializer = ReviewSerializer(self.queryset, many=True)
         return Response(serializer.data)
     
     @extend_schema(request=ReviewSerializer, responses=ReviewSerializer)
@@ -95,7 +99,7 @@ class ReviewViewSet(viewsets.ViewSet):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.data,status=status.HTTP_400_BAD_REQUEST)
-    
+
     @extend_schema(responses=ReviewSerializer)
     def retrieve(self, request, pk=None):
         try:
@@ -105,8 +109,8 @@ class ReviewViewSet(viewsets.ViewSet):
 
         serializer = ReviewSerializer(review)
         return Response(serializer.data)
-
-    @extend_schema(request=ReviewSerializer, responses=ReviewSerializer)
+    
+    @extend_schema(request=ReviewSerializer,responses=ReviewSerializer)
     def update(self, request, pk):
 
         try:
@@ -131,25 +135,28 @@ class ReviewViewSet(viewsets.ViewSet):
         
         review.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
+    
+    
+    @action(detail=False, methods=['GET'],url_path='by-book/(?P<book_id>[^/.]+)')
     @extend_schema(responses=ReviewSerializer(many=True))
     def get_by_book(self, request, book_id=None):
         try:
             book = Book.objects.get(pk=book_id)
         except Book.DoesNotExist:
-            return Response({'error':'Book Not Found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error':'Review Not Found'}, status=status.HTTP_404_NOT_FOUND)
         
         reviews = Review.objects.filter(book=book)
         serializer = ReviewSerializer(reviews, many=True)
 
         return Response(serializer.data)
-    
+
+    @action(detail=False, methods=['GET'],url_path='by-user/(?P<user_id>[^/.]+)')
     @extend_schema(responses=ReviewSerializer(many=True))
     def get_by_user(self, request, user_id=None):
         try:
             user = AuthUser.objects.get(pk=user_id)
         except AuthUser.DoesNotExist:
-            return Response({'error':'Book Not Found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'error':'Review Not Found'}, status=status.HTTP_404_NOT_FOUND)
         
         reviews = Review.objects.filter(user=user)
         serializer = ReviewSerializer(reviews, many=True)

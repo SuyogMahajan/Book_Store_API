@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from .models import Author, Book, Language, Review
-
+from auth_app.models import AuthUser
 
 class AuthorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,7 +25,7 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
 
-    user = serializers.PrimaryKeyRelatedField(queryset=Review.objects.all())
+    user = serializers.PrimaryKeyRelatedField(queryset=AuthUser.objects.all())
     book = serializers.PrimaryKeyRelatedField(queryset=Book.objects.all())
 
     class Meta:

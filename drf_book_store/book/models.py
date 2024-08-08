@@ -12,7 +12,7 @@ class Language(models.Model):
 class Author(models.Model):
     name = models.CharField(max_length=50)
     disciption = models.TextField(null=True)
-    photo = models.URLField(null=True)
+    photo = models.ImageField(upload_to ='uploads/',null=True)
     dob = models.DateField(null=True)
 
     def __str__(self):
@@ -39,9 +39,9 @@ class Book(models.Model):
 class Review(models.Model):
     user = models.ForeignKey(AuthUser,on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    rating = models.DecimalField
-    review = models.TextField
-    date = models.DateField
+    rating = models.DecimalField(max_digits=3, decimal_places=1,default=5.0) 
+    review = models.TextField(null=True)
+    date = models.DateField(auto_now_add=True) 
 
     def __str__(self):
         return f"{self.user} - {self.book}"
