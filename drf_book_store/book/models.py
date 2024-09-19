@@ -1,5 +1,4 @@
 from django.db import models
-from auth_app.models import AuthUser
 
 
 class Language(models.Model):
@@ -37,7 +36,7 @@ class Book(models.Model):
 
 
 class Review(models.Model):
-    user = models.ForeignKey(AuthUser,on_delete=models.CASCADE)
+    user = models.ForeignKey('auth_app.AuthUser',on_delete=models.CASCADE)
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
     rating = models.DecimalField(max_digits=3, decimal_places=1,default=5.0) 
     review = models.TextField(null=True)

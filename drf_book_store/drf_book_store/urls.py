@@ -21,13 +21,18 @@ from rest_framework.routers import DefaultRouter
 from book import views as book_views
 from auth_app import views as auth_views
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+# from .settings import base_settings
+from django.conf.urls.static import static
+from django.conf import settings
 
 router = DefaultRouter()
-router.register(r"Author", book_views.AuthorViewSet)
-router.register(r"Book", book_views.BookViewSet)
-router.register(r"Language", book_views.LanguageViewSet)
-router.register(r"users", auth_views.UserViewSet, basename="user")
-router.register(r"Review", book_views.ReviewViewSet)
+router.register(r"author", book_views.AuthorViewSet)
+router.register(r"book", book_views.BookViewSet)
+router.register(r"language", book_views.LanguageViewSet)
+router.register(r"user", auth_views.UserViewSet, basename="user")
+router.register(r"review", book_views.ReviewViewSet)
+router.register(r"address", auth_views.AddressViewSet, basename="address")
+router.register(r"cart", auth_views.CartViewSet)
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -35,3 +40,7 @@ urlpatterns = [
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/schema/docs/", SpectacularSwaggerView.as_view(url_name="schema")),
 ]
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
